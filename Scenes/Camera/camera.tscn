@@ -5,3 +5,5 @@
 [node name="Camera" type="Camera3D"]
 process_mode = 3
 script = ExtResource("1_wmbm5")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]

@@ -21,7 +21,7 @@ func create_floor(x: float, z: float):
 	var mesh_instance = MeshInstance3D.new()
 	var plane_mesh = PlaneMesh.new()
 	var mesh_material = StandardMaterial3D.new()
-	mesh_material.albedo_color = Color.DARK_GRAY
+	mesh_material.albedo_color = Color.SLATE_GRAY
 	plane_mesh.size = Vector2(x,z)
 	mesh_instance.mesh = plane_mesh
 	mesh_instance.material_override = mesh_material
@@ -36,3 +36,7 @@ func create_floor(x: float, z: float):
 	collision.add_child(collider)
 	mesh_instance.add_child(collision)
 	
+
+
+func _on_close_requested() -> void:
+	visible = false

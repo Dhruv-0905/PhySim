@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cla2vlfh1rsee"]
+[gd_scene load_steps=12 format=3 uid="uid://cla2vlfh1rsee"]
 
 [ext_resource type="Script" uid="uid://jido5214h7ss" path="res://Scenes/UI/ui.gd" id="1_ahcct"]
 [ext_resource type="PackedScene" uid="uid://m0ggrkjhsx3x" path="res://Scenes/UI/spawn_button/physics_obj_button.tscn" id="3_c7mb3"]
@@ -7,8 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://bqcty35encudy" path="res://Scenes/UI/Add Floor/add_floor.tscn" id="4_fo61o"]
 [ext_resource type="PackedScene" uid="uid://dii8er3bmt6nr" path="res://Physics Objects/Cylinder/cylinder.tscn" id="5_duuxe"]
 [ext_resource type="Script" uid="uid://co4bukhj8le3g" path="res://Scenes/UI/outliner.gd" id="7_duuxe"]
-[ext_resource type="Script" uid="uid://dr1of3g8ttqo0" path="res://Scenes/UI/physics_properties.gd" id="8_jfwrg"]
 [ext_resource type="Script" uid="uid://f77gk21jekcc" path="res://Scenes/UI/item_list.gd" id="8_mbl0m"]
+[ext_resource type="PackedScene" uid="uid://c125jsyod0vrv" path="res://Scenes/UI/Physics Properties/physics_properties.tscn" id="9_pmm6b"]
+[ext_resource type="Script" uid="uid://b2yh4jyhw83qg" path="res://Scenes/UI/playback.gd" id="10_s3gqk"]
+[ext_resource type="Script" uid="uid://c3rmji4c7n1ds" path="res://Scenes/UI/metrics.gd" id="11_pmm6b"]
 
 [node name="UI" type="Control"]
 process_mode = 3
@@ -21,9 +23,11 @@ grow_vertical = 2
 script = ExtResource("1_ahcct")
 
 [node name="Top Panel" type="MarginContainer" parent="."]
-layout_mode = 2
-offset_right = 1920.0
-offset_bottom = 149.0
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 157.0
+grow_horizontal = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
@@ -62,6 +66,7 @@ layout_mode = 2
 [node name="Add_Floor" type="Button" parent="Top Panel/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 0
 focus_mode = 0
 text = "Floor"
 
@@ -74,9 +79,8 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -207.0
-offset_top = 154.0
-offset_right = -1.0
+offset_left = -167.0
+offset_top = 162.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_override_constants/margin_left = 5
@@ -97,87 +101,61 @@ layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("8_mbl0m")
 
-[node name="Physics Properties" type="VBoxContainer" parent="Outliner/VBoxContainer"]
+[node name="Physics Properties" parent="Outliner/VBoxContainer" instance=ExtResource("9_pmm6b")]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 11
-script = ExtResource("8_jfwrg")
-
-[node name="Label" type="Label" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Physics Material"
-
-[node name="Mass-lab" type="Label" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-text = "Mass"
-
-[node name="Mass" type="HSlider" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-max_value = 1000.0
-
-[node name="Gravity Scale-lab" type="Label" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-text = "Gravity Scale"
-
-[node name="GravityScale" type="HSlider" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-max_value = 8.0
-step = 0.1
-
-[node name="Friction label" type="Label" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-text = "Friction"
-
-[node name="Friction" type="HSlider" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-max_value = 1.0
-step = 0.01
-
-[node name="Bounce-lab" type="Label" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-text = "Bounce"
-
-[node name="Bounce" type="HSlider" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-max_value = 1.0
-step = 0.01
-
-[node name="CheckBox" type="CheckBox" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-focus_mode = 0
-text = "Rough"
-
-[node name="CheckBox2" type="CheckBox" parent="Outliner/VBoxContainer/Physics Properties"]
-layout_mode = 2
-focus_mode = 0
-text = "Absorbent"
 
 [node name="Playback" type="MarginContainer" parent="."]
+process_mode = 3
 layout_direction = 2
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -73.0
-offset_right = -213.0
+offset_top = -31.0
+offset_right = -167.0
 grow_horizontal = 2
 grow_vertical = 0
+script = ExtResource("10_s3gqk")
 
-[node name="Playback_button" type="Button" parent="Playback"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Playback"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Playback_button" type="Button" parent="Playback/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 focus_mode = 0
 text = "Pause"
 
+[node name="Step_button" type="Button" parent="Playback/HBoxContainer"]
+process_mode = 3
+layout_mode = 2
+focus_mode = 0
+
+[node name="Metrics" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = 183.0
+offset_right = 180.0
+offset_bottom = -81.0
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("11_pmm6b")
+
+[node name="metrics_label" type="Label" parent="Metrics"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_outline_color = Color(0.154876, 0.154876, 0.154876, 1)
+theme_override_constants/outline_size = 12
+text = "METRICS:"
+
 [connection signal="pressed" from="Top Panel/HBoxContainer/HBoxContainer2/Add_Floor" to="." method="_on_add_floor_pressed"]
 [connection signal="item_selected" from="Outliner/VBoxContainer/Objects/ItemList" to="Outliner/VBoxContainer/Objects/ItemList" method="_on_item_selected"]
-[connection signal="value_changed" from="Outliner/VBoxContainer/Physics Properties/Mass" to="Outliner/VBoxContainer/Physics Properties" method="_on_mass_value_changed"]
-[connection signal="value_changed" from="Outliner/VBoxContainer/Physics Properties/GravityScale" to="Outliner/VBoxContainer/Physics Properties" method="_on_gravity_scale_value_changed"]
-[connection signal="value_changed" from="Outliner/VBoxContainer/Physics Properties/Friction" to="Outliner/VBoxContainer/Physics Properties" method="_on_friction_value_changed"]
-[connection signal="value_changed" from="Outliner/VBoxContainer/Physics Properties/Bounce" to="Outliner/VBoxContainer/Physics Properties" method="_on_bounce_value_changed"]
-[connection signal="toggled" from="Outliner/VBoxContainer/Physics Properties/CheckBox" to="Outliner/VBoxContainer/Physics Properties" method="_on_check_box_toggled"]
-[connection signal="toggled" from="Outliner/VBoxContainer/Physics Properties/CheckBox2" to="Outliner/VBoxContainer/Physics Properties" method="_on_check_box_2_toggled"]
-[connection signal="pressed" from="Playback/Playback_button" to="." method="_on_playback_button_pressed"]
+[connection signal="pressed" from="Playback/HBoxContainer/Playback_button" to="Playback" method="_on_playback_button_pressed"]
+[connection signal="pressed" from="Playback/HBoxContainer/Step_button" to="Playback" method="_on_step_button_pressed"]

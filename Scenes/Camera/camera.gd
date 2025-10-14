@@ -1,4 +1,7 @@
 extends Camera3D
+@onready var ray_cast_3d: RayCast3D = $RayCast3D
+
+var physics_property
 
 var orbit_sensitivity := 0.005
 var pan_sensitivity := 0.01
@@ -10,10 +13,27 @@ var distance := 10.0
 var target_position := Vector3.ZERO  # The point to orbit around
 
 func _ready():
+	physics_property = get_tree().get_first_node_in_group("Physics_property") #not the cleanest way of doing it, but it works
 	pitch = deg_to_rad(20)  # tilt down a bit
 	distance = 10
 	target_position = Vector3.ZERO
 	_update_camera_position()
+
+func _process(delta: float) -> void:
+	var mouse_position: Vector2 =get_viewport().get_mouse_position()
+	ray_cast_3d.target_position = project_local_ray_normal(mouse_position) * 100
+	ray_cast_3d.force_raycast_update()
+	select_object_click()
+
+func select_object_click():
+	var nodes = get_tree().get_nodes_in_group("obj")
+	if ray_cast_3d.is_colliding():
+		var collider = ray_cast_3d.get_collider()
+		if collider.is_in_group("obj"):
+			var index = nodes.find(collider)
+			if Input.is_action_just_pressed("Click"):
+				physics_property.set_selected_object(collider)
+				SignalManager.on_camera_obj_selected(index)
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):

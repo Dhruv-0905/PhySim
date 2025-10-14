@@ -1,0 +1,65 @@
+[gd_scene load_steps=2 format=3 uid="uid://c125jsyod0vrv"]
+
+[ext_resource type="Script" uid="uid://dr1of3g8ttqo0" path="res://Scenes/UI/physics_properties.gd" id="1_binvg"]
+
+[node name="Physics Properties" type="VBoxContainer" groups=["Physics_property"]]
+size_flags_vertical = 3
+theme_override_constants/separation = 11
+script = ExtResource("1_binvg")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Physics Material"
+
+[node name="Mass-lab" type="Label" parent="."]
+layout_mode = 2
+text = "Mass"
+
+[node name="Mass" type="HSlider" parent="."]
+layout_mode = 2
+max_value = 1000.0
+
+[node name="Gravity Scale-lab" type="Label" parent="."]
+layout_mode = 2
+text = "Gravity Scale"
+
+[node name="GravityScale" type="HSlider" parent="."]
+layout_mode = 2
+max_value = 8.0
+step = 0.1
+
+[node name="Friction label" type="Label" parent="."]
+layout_mode = 2
+text = "Friction"
+
+[node name="Friction" type="HSlider" parent="."]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="Bounce-lab" type="Label" parent="."]
+layout_mode = 2
+text = "Bounce"
+
+[node name="Bounce" type="HSlider" parent="."]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="CheckBox" type="CheckBox" parent="."]
+layout_mode = 2
+focus_mode = 0
+text = "Rough"
+
+[node name="CheckBox2" type="CheckBox" parent="."]
+layout_mode = 2
+focus_mode = 0
+text = "Absorbent"
+
+[connection signal="value_changed" from="Mass" to="." method="_on_mass_value_changed"]
+[connection signal="value_changed" from="GravityScale" to="." method="_on_gravity_scale_value_changed"]
+[connection signal="value_changed" from="Friction" to="." method="_on_friction_value_changed"]
+[connection signal="value_changed" from="Bounce" to="." method="_on_bounce_value_changed"]
+[connection signal="toggled" from="CheckBox" to="." method="_on_check_box_toggled"]
+[connection signal="toggled" from="CheckBox2" to="." method="_on_check_box_2_toggled"]
