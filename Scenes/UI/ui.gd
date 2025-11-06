@@ -12,6 +12,19 @@ var name_counters := {}
 
 func _ready() -> void:
 	SignalManager.spawn_button_pressed.connect(spawn_button_pressed)
+	SignalManager.ragdoll_button_pressed.connect(ragdoll_button_pressed)
+
+
+func ragdoll_button_pressed(ragdoll: PackedScene) -> void:
+	var new_ragdoll = ragdoll.instantiate()
+	new_ragdoll.add_to_group("Ragdoll")
+	var base_name = new_ragdoll.name
+	var unique_name = _get_unique_name(base_name)
+	new_ragdoll.name = unique_name
+	
+	SignalManager.on_object_added(new_ragdoll)
+	new_ragdoll.global_position = Vector3(0,0,0)
+	add_child(new_ragdoll)
 
 
 func spawn_button_pressed(object: PackedScene) -> void:

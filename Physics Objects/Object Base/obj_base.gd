@@ -1,10 +1,11 @@
 extends RigidBody3D
+class_name Phy_Obj
+
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
 	set_color()
 	
 

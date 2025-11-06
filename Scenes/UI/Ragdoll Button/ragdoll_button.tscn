@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://dh56ib8nbvose"]
+
+[ext_resource type="Script" uid="uid://dlp53pixcaqfw" path="res://Scenes/UI/Ragdoll Button/ragdoll_button.gd" id="1_wdshl"]
+
+[node name="Ragdoll Button" type="Button"]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Add Ragdoll"
+script = ExtResource("1_wdshl")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

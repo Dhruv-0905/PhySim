@@ -29,11 +29,20 @@ func select_object_click():
 	var nodes = get_tree().get_nodes_in_group("obj")
 	if ray_cast_3d.is_colliding():
 		var collider = ray_cast_3d.get_collider()
+		print(collider)
 		if collider.is_in_group("obj"):
 			var index = nodes.find(collider)
 			if Input.is_action_just_pressed("Click"):
-				physics_property.set_selected_object(collider)
-				SignalManager.on_camera_obj_selected(index)
+				if collider is not Ragdoll:
+					physics_property.set_selected_object(collider)
+					physics_property.visible = true
+					SignalManager.on_camera_obj_selected(index)
+				if collider is Ragdoll:
+					var parent_1 = collider.get_parent_node_3d()
+					var parent_2 = parent_1.get_parent_node_3d()
+					var parent_3 = parent_2.get_parent_node_3d()
+					SignalManager.on_camera_obj_selected(parent_3)
+			
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):

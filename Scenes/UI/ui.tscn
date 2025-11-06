@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cla2vlfh1rsee"]
+[gd_scene load_steps=15 format=3 uid="uid://cla2vlfh1rsee"]
 
 [ext_resource type="Script" uid="uid://jido5214h7ss" path="res://Scenes/UI/ui.gd" id="1_ahcct"]
 [ext_resource type="PackedScene" uid="uid://m0ggrkjhsx3x" path="res://Scenes/UI/spawn_button/physics_obj_button.tscn" id="3_c7mb3"]
@@ -6,11 +6,14 @@
 [ext_resource type="PackedScene" uid="uid://kntap0c674p1" path="res://Physics Objects/Sphere/sphere.tscn" id="4_1c2ca"]
 [ext_resource type="PackedScene" uid="uid://bqcty35encudy" path="res://Scenes/UI/Add Floor/add_floor.tscn" id="4_fo61o"]
 [ext_resource type="PackedScene" uid="uid://dii8er3bmt6nr" path="res://Physics Objects/Cylinder/cylinder.tscn" id="5_duuxe"]
+[ext_resource type="PackedScene" uid="uid://dh56ib8nbvose" path="res://Scenes/UI/Ragdoll Button/ragdoll_button.tscn" id="6_fy0us"]
+[ext_resource type="PackedScene" uid="uid://b43t7qe1lnmeu" path="res://Physics Objects/Ragdoll/ragdoll_final_backup.tscn" id="6_vy225"]
 [ext_resource type="Script" uid="uid://co4bukhj8le3g" path="res://Scenes/UI/outliner.gd" id="7_duuxe"]
 [ext_resource type="Script" uid="uid://f77gk21jekcc" path="res://Scenes/UI/item_list.gd" id="8_mbl0m"]
 [ext_resource type="PackedScene" uid="uid://c125jsyod0vrv" path="res://Scenes/UI/Physics Properties/physics_properties.tscn" id="9_pmm6b"]
 [ext_resource type="Script" uid="uid://b2yh4jyhw83qg" path="res://Scenes/UI/playback.gd" id="10_s3gqk"]
 [ext_resource type="Script" uid="uid://c3rmji4c7n1ds" path="res://Scenes/UI/metrics.gd" id="11_pmm6b"]
+[ext_resource type="PackedScene" uid="uid://b26c1oaxfsqm2" path="res://Scenes/UI/Ragdoll properties/ragdoll_properties.tscn" id="12_h6tq4"]
 
 [node name="UI" type="Control"]
 process_mode = 3
@@ -33,6 +36,10 @@ theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
+
+[node name="ColorRect" type="ColorRect" parent="Top Panel"]
+layout_mode = 2
+color = Color(0.317647, 0.317647, 0.317647, 0.388235)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Top Panel"]
 layout_mode = 2
@@ -59,6 +66,13 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 object = ExtResource("5_duuxe")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Top Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="Ragdoll Button" parent="Top Panel/HBoxContainer/VBoxContainer" instance=ExtResource("6_fy0us")]
+layout_mode = 2
+ragdoll = ExtResource("6_vy225")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Top Panel/HBoxContainer"]
 layout_mode = 2
@@ -102,6 +116,11 @@ size_flags_vertical = 3
 script = ExtResource("8_mbl0m")
 
 [node name="Physics Properties" parent="Outliner/VBoxContainer" instance=ExtResource("9_pmm6b")]
+visible = false
+layout_mode = 2
+
+[node name="Ragdoll properties" parent="Outliner/VBoxContainer" instance=ExtResource("12_h6tq4")]
+visible = false
 layout_mode = 2
 
 [node name="Playback" type="MarginContainer" parent="."]
