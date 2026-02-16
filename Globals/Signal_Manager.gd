@@ -7,6 +7,8 @@ signal camera_obj_selected(obj: Node)
 signal ragdoll_button_pressed(ragdoll: PackedScene)
 signal ragdoll_selected(ragdoll: Node)
 signal env_state_changed(state: EnvironmentManager.EnvState)
+signal fluid_spawned(fluidArea: FluidVolume3D)
+
 
 # when the object button is pressed
 func on_spawn_button_pressed(object: PackedScene):
@@ -35,3 +37,6 @@ func on_ragdoll_selected(ragdoll: Node):
 # when environment state is changed
 func on_env_state_changed(state: EnvironmentManager.EnvState):
 	env_state_changed.emit(state)
+
+func on_fluid_spawned(fluidArea: FluidVolume3D):
+	fluid_spawned.emit(fluidArea)

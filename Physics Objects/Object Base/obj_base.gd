@@ -3,6 +3,7 @@ class_name Phy_Obj
 
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
+@onready var height_ref: Marker3D = $Marker3D
 
 @export var volume: float = 0.125  # m³ (default: 0.5×0.5×0.5 cube)
 @export var object_density: float = 500.0  # kg/m³ (< 1000 floats in water, > 1000 sinks)
@@ -62,6 +63,13 @@ func estimate_volume() -> float:
 		var r = cyl.radius
 		var h = cyl.height
 		return PI * r * r * h
+
+		
+	if shape is ConvexPolygonShape3D:
+		var points = shape.points
+		var side = abs((points[0] as Vector3).distance_to(points[1] as Vector3))
+		var height = abs((points[0] as Vector3).distance_to(height_ref.position))
+		return side * side * height
 	
 	return 0.125
 

@@ -37,6 +37,7 @@ func create_fluid_volume(x: float, y: float, z: float) -> void:
 	new_fluid.add_child(mesh_instance)
 	new_fluid.global_position = Vector3(0,y/2.0,0)
 	get_tree().current_scene.add_child(new_fluid)
+	SignalManager.on_fluid_spawned(new_fluid)
 	
 func _on_close_requested() -> void:
 	visible = false

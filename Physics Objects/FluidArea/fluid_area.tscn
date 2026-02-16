@@ -1,9 +1,251 @@
-[gd_scene load_steps=2 format=3 uid="uid://fm2ldtpbavic"]
+[gd_scene load_steps=20 format=3 uid="uid://fm2ldtpbavic"]
 
-[ext_resource type="Script" uid="uid://wg2j3lyokafp" path="res://Physics Objects/FluidArea/fluid_area.gd" id="1_8suw0"]
+[ext_resource type="Script" uid="uid://jido5214h7ss" path="res://Scenes/UI/ui.gd" id="1_4rp3h"]
+[ext_resource type="PackedScene" uid="uid://m0ggrkjhsx3x" path="res://Scenes/UI/spawn_button/physics_obj_button.tscn" id="2_pfmov"]
+[ext_resource type="PackedScene" uid="uid://kntap0c674p1" path="res://Physics Objects/Sphere/sphere.tscn" id="3_7ia7i"]
+[ext_resource type="PackedScene" uid="uid://duempp52ehfdr" path="res://Physics Objects/Cube/cube.tscn" id="4_s2lnh"]
+[ext_resource type="PackedScene" uid="uid://dii8er3bmt6nr" path="res://Physics Objects/Cylinder/cylinder.tscn" id="5_3vln4"]
+[ext_resource type="PackedScene" uid="uid://buwdwtqjpeod0" path="res://Physics Objects/Capsule/capsule.tscn" id="6_0qhq2"]
+[ext_resource type="PackedScene" uid="uid://cpsp5qof2ftl2" path="res://Physics Objects/Prism/prism.tscn" id="7_spw1l"]
+[ext_resource type="PackedScene" uid="uid://dh56ib8nbvose" path="res://Scenes/UI/Ragdoll Button/ragdoll_button.tscn" id="8_0g1l3"]
+[ext_resource type="PackedScene" uid="uid://b43t7qe1lnmeu" path="res://Physics Objects/Ragdoll/ragdoll_final_backup.tscn" id="9_ce1rw"]
+[ext_resource type="PackedScene" uid="uid://bqcty35encudy" path="res://Scenes/UI/Add Floor/add_floor.tscn" id="10_2tp0g"]
+[ext_resource type="PackedScene" uid="uid://dwdxpcmpkfhta" path="res://Scenes/UI/Add Fluid/add_fluid.tscn" id="11_ot46t"]
+[ext_resource type="Script" uid="uid://co4bukhj8le3g" path="res://Scenes/UI/outliner.gd" id="12_pgt5u"]
+[ext_resource type="Script" uid="uid://f77gk21jekcc" path="res://Scenes/UI/item_list.gd" id="13_6j8nt"]
+[ext_resource type="PackedScene" uid="uid://c125jsyod0vrv" path="res://Scenes/UI/Physics Properties/physics_properties.tscn" id="14_uu6el"]
+[ext_resource type="PackedScene" uid="uid://b26c1oaxfsqm2" path="res://Scenes/UI/Ragdoll properties/ragdoll_properties.tscn" id="15_eppac"]
+[ext_resource type="Script" uid="uid://b2yh4jyhw83qg" path="res://Scenes/UI/playback.gd" id="16_r20ih"]
+[ext_resource type="Script" uid="uid://c3rmji4c7n1ds" path="res://Scenes/UI/metrics.gd" id="17_3kvom"]
+[ext_resource type="Script" uid="uid://c1ldkea550mdq" path="res://Scenes/UI/environment_state.gd" id="18_gmqyv"]
+[ext_resource type="Script" uid="uid://pb2pn23a2jmk" path="res://Scenes/UI/fluid_properties.gd" id="19_ddmq6"]
 
-[node name="FluidArea" type="Area3D"]
-script = ExtResource("1_8suw0")
+[node name="UI" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_behavior_recursive = 1
+script = ExtResource("1_4rp3h")
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
-[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[node name="Top Panel" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 157.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ColorRect" type="ColorRect" parent="Top Panel"]
+layout_mode = 2
+color = Color(0.317647, 0.317647, 0.317647, 0.388235)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Top Panel"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Top Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Physics_Obj_Button" parent="Top Panel/HBoxContainer/HBoxContainer" instance=ExtResource("2_pfmov")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+object = ExtResource("3_7ia7i")
+
+[node name="Physics_Obj_Button2" parent="Top Panel/HBoxContainer/HBoxContainer" instance=ExtResource("2_pfmov")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+object = ExtResource("4_s2lnh")
+
+[node name="Physics_Obj_Button3" parent="Top Panel/HBoxContainer/HBoxContainer" instance=ExtResource("2_pfmov")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+object = ExtResource("5_3vln4")
+
+[node name="Physics_Obj_Button4" parent="Top Panel/HBoxContainer/HBoxContainer" instance=ExtResource("2_pfmov")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+object = ExtResource("6_0qhq2")
+
+[node name="Physics_Obj_Button5" parent="Top Panel/HBoxContainer/HBoxContainer" instance=ExtResource("2_pfmov")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+object = ExtResource("7_spw1l")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Top Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="Ragdoll Button" parent="Top Panel/HBoxContainer/VBoxContainer" instance=ExtResource("8_0g1l3")]
+layout_mode = 2
+ragdoll = ExtResource("9_ce1rw")
+
+[node name="VBOx" type="VBoxContainer" parent="Top Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="Add_Floor" type="Button" parent="Top Panel/HBoxContainer/VBOx"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+focus_mode = 0
+text = "Floor"
+
+[node name="Add Floor" parent="Top Panel/HBoxContainer/VBOx" instance=ExtResource("10_2tp0g")]
+exclusive = true
+
+[node name="Button" type="Button" parent="Top Panel/HBoxContainer/VBOx"]
+layout_mode = 2
+text = "Fluid"
+
+[node name="Add Fluid" parent="Top Panel/HBoxContainer/VBOx" instance=ExtResource("11_ot46t")]
+
+[node name="Outliner" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -167.0
+offset_top = 162.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("12_pgt5u")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Outliner"]
+layout_mode = 2
+
+[node name="Objects" type="VBoxContainer" parent="Outliner/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemList" type="ItemList" parent="Outliner/VBoxContainer/Objects"]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("13_6j8nt")
+
+[node name="Physics Properties" parent="Outliner/VBoxContainer" instance=ExtResource("14_uu6el")]
+visible = false
+layout_mode = 2
+
+[node name="Ragdoll properties" parent="Outliner/VBoxContainer" instance=ExtResource("15_eppac")]
+visible = false
+layout_mode = 2
+
+[node name="Playback" type="MarginContainer" parent="."]
+process_mode = 3
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = -167.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("16_r20ih")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Playback"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Playback_button" type="Button" parent="Playback/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+focus_mode = 0
+text = "Pause"
+
+[node name="Step_button" type="Button" parent="Playback/HBoxContainer"]
+process_mode = 3
+layout_mode = 2
+focus_mode = 0
+
+[node name="Metrics" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = 183.0
+offset_right = 180.0
+offset_bottom = -552.0
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("17_3kvom")
+
+[node name="metrics_label" type="Label" parent="Metrics"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_outline_color = Color(0.154876, 0.154876, 0.154876, 1)
+theme_override_constants/outline_size = 12
+text = "METRICS:"
+
+[node name="Environment State" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = 403.0
+offset_right = 180.0
+offset_bottom = -49.0
+grow_vertical = 2
+script = ExtResource("18_gmqyv")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Environment State"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Environment State/VBoxContainer"]
+layout_mode = 2
+text = "Environment State"
+
+[node name="OptionButton" type="OptionButton" parent="Environment State/VBoxContainer"]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Vaccum"
+popup/item_0/id = 0
+popup/item_1/text = "Atmosphere"
+popup/item_1/id = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Environment State/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Fluid Properties" type="VBoxContainer" parent="Environment State/VBoxContainer/MarginContainer"]
+layout_mode = 2
+script = ExtResource("19_ddmq6")
+
+[node name="Fluid_density" type="Label" parent="Environment State/VBoxContainer/MarginContainer/Fluid Properties"]
+layout_mode = 2
+text = "Fluid Density"
+
+[node name="fluid_den_slider" type="HSlider" parent="Environment State/VBoxContainer/MarginContainer/Fluid Properties"]
+layout_mode = 2
+min_value = 1.0
+max_value = 20000.0
+value = 1.0
+
+[connection signal="pressed" from="Top Panel/HBoxContainer/VBOx/Add_Floor" to="." method="_on_add_floor_pressed"]
+[connection signal="pressed" from="Top Panel/HBoxContainer/VBOx/Button" to="." method="_on_button_pressed"]
+[connection signal="item_selected" from="Outliner/VBoxContainer/Objects/ItemList" to="Outliner/VBoxContainer/Objects/ItemList" method="_on_item_selected"]
+[connection signal="pressed" from="Playback/HBoxContainer/Playback_button" to="Playback" method="_on_playback_button_pressed"]
+[connection signal="pressed" from="Playback/HBoxContainer/Step_button" to="Playback" method="_on_step_button_pressed"]
+[connection signal="item_selected" from="Environment State/VBoxContainer/OptionButton" to="Environment State" method="_on_option_button_item_selected"]
+[connection signal="value_changed" from="Environment State/VBoxContainer/MarginContainer/Fluid Properties/fluid_den_slider" to="Environment State/VBoxContainer/MarginContainer/Fluid Properties" method="_on_fluid_den_slider_value_changed"]

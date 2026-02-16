@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cpsp5qof2ftl2"]
+
+[ext_resource type="PackedScene" uid="uid://drhiwnyfk8a2u" path="res://Physics Objects/Object Base/obj_base.tscn" id="1_ws1lg"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_aadau"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ogidg"]
+points = PackedVector3Array(0, 0, 0, 0, 0, -1, 1, 0, 0, 1, 0, -1, 0.5, 1, 0, 0.5, 1, -1)
+
+[node name="Prism" instance=ExtResource("1_ws1lg")]
+
+[node name="MeshInstance3D" parent="." index="0"]
+mesh = SubResource("PrismMesh_aadau")
+
+[node name="CollisionShape3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.5, 0.5)
+shape = SubResource("ConvexPolygonShape3D_ogidg")
+
+[node name="Marker3D" type="Marker3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 0.5)
