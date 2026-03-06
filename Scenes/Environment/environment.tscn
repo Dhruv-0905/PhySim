@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dt3ci7wfi5r4d"]
+[gd_scene format=3 uid="uid://dt3ci7wfi5r4d"]
 
 [ext_resource type="Script" uid="uid://bf6eflxq5m3cp" path="res://Scenes/Environment/environment.gd" id="1_jhh7m"]
 [ext_resource type="PackedScene" uid="uid://ed5habgb38k" path="res://Scenes/Camera/camera.tscn" id="3_13gqk"]
@@ -17,18 +17,18 @@ sky = SubResource("Sky_jhh7m")
 tonemap_mode = 2
 glow_enabled = true
 
-[node name="Environment" type="Node3D"]
+[node name="Environment" type="Node3D" unique_id=657516754]
 script = ExtResource("1_jhh7m")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1175355199]
 environment = SubResource("Environment_goyhe")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1370060740]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Camera" parent="." instance=ExtResource("3_13gqk")]
+[node name="Camera" parent="." unique_id=385263835 instance=ExtResource("3_13gqk")]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 2, 4)
 
-[node name="UI" parent="." instance=ExtResource("3_owdl0")]
+[node name="UI" parent="." unique_id=113451521 instance=ExtResource("3_owdl0")]
 mouse_filter = 2

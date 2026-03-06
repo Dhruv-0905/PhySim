@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 	if not is_in_fluid:
 		apply_air_drag()
 	#despawn()
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed("add"):
 		linear_velocity.y = 10
 
 func set_color() -> void:
