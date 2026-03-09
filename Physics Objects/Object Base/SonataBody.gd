@@ -206,23 +206,28 @@ func get_context() -> PackedFloat32Array:
 
 # ── Apply prediction ──────────────────────────────────────────
 func apply_prediction(pred: PackedFloat32Array) -> void:
-	var p0 := PackedFloat32Array()
-	for i in range(13):
-		p0.append(pred[i] * T_STD[i] + T_MEAN[i])
+	"""
+	Velocity-only mode: model sets velocity each tick,
+	Godot physics integrates position and resolves collisions.
+	This prevents levitation from position error accumulation.
+	"""
+	# Denormalize first predicted frame (indices 0-12)
+	var new_lv := Vector3(
+		pred[7]  * T_STD[7]  + T_MEAN[7],
+		pred[8]  * T_STD[8]  + T_MEAN[8],
+		pred[9]  * T_STD[9]  + T_MEAN[9]
+	)
+	var new_av := Vector3(
+		pred[10] * T_STD[10] + T_MEAN[10],
+		pred[11] * T_STD[11] + T_MEAN[11],
+		pred[12] * T_STD[12] + T_MEAN[12]
+	)
 
-	var new_pos := Vector3(p0[0], p0[1], p0[2])
+	# Clamp to physically plausible range — prevents rare model outliers
+	# from launching objects off-screen
+	new_lv = new_lv.clamp(Vector3(-400, -400, -400), Vector3(400, 400, 400))
+	new_av = new_av.clamp(Vector3(-50, -50, -50),    Vector3(50,  50,  50))
 
-	var qw := p0[3]; var qx := p0[4]; var qy := p0[5]; var qz := p0[6]
-	var qlen := sqrt(qw*qw + qx*qx + qy*qy + qz*qz)
-	if qlen > 1e-6:
-		qw /= qlen; qx /= qlen; qy /= qlen; qz /= qlen
-	var new_rot := Quaternion(qx, qy, qz, qw)
-
-	var new_lv := Vector3(p0[7],  p0[8],  p0[9])
-	var new_av := Vector3(p0[10], p0[11], p0[12])
-
-	_body.global_position  = new_pos
-	_body.quaternion       = new_rot
 	_body.linear_velocity  = new_lv
 	_body.angular_velocity = new_av
 
