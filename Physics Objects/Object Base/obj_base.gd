@@ -9,6 +9,7 @@ class_name Phy_Obj
 @export var object_density: float = 500.0  # kg/m³ (< 1000 floats in water, > 1000 sinks)
 
 var is_in_fluid := false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_color()
@@ -16,6 +17,10 @@ func _ready() -> void:
 	object_density = calculate_density()
 	print(volume)
 	print(object_density)
+	var _sonata := preload("res://Physics Objects/Object Base/SonataBody.gd").new()
+	_sonata.env_state = EnvironmentManager.env_binary   # 0=Vacuum, 1=Atmosphere
+	_sonata.air_drag_coeff = EnvironmentManager.get_drag_coefficeint()
+	add_child(_sonata)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
