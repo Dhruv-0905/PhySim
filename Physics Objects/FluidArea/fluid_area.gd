@@ -230,7 +230,7 @@ func _cache_bone(bone: PhysicalBone3D) -> void:
 # ================================================================
 
 func _on_body_entered(body: Node3D) -> void:
-	if body is Phy_Obj and not _submerged_bodies.has(body):
+	if body.has_method("get_body_height_y") and not _submerged_bodies.has(body): 
 		_submerged_bodies.append(body)
 		body.is_in_fluid = true
 	elif body is PhysicalBone3D and not _submerged_bones.has(body):
@@ -239,7 +239,7 @@ func _on_body_entered(body: Node3D) -> void:
 		_cache_bone(body)
 
 func _on_body_exited(body: Node3D) -> void:
-	if body is Phy_Obj:
+	if body.has_method("get_body_height_y"): 
 		_submerged_bodies.erase(body)
 		body.is_in_fluid = false
 	elif body is PhysicalBone3D:

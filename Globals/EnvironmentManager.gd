@@ -21,7 +21,7 @@ func set_state(new_state: EnvState) -> void:
 	for body in get_tree().get_nodes_in_group("sonata_bodies"):
 		body.env_state      = env_binary
 		body.air_drag_coeff = get_drag_coefficeint()
-		body._static_norm   = body._build_static_norm()
+		body.staticnorm     = body.build_static_norm()  # ← fixed
 
 func get_drag_coefficeint() -> float:
 	match current_state:

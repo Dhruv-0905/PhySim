@@ -25,8 +25,8 @@ func create_floor(x: float, z: float):
 	plane_mesh.size = Vector2(x,z)
 	mesh_instance.mesh = plane_mesh
 	mesh_instance.material_override = mesh_material
+	get_tree().get_root().add_child(mesh_instance)
 	mesh_instance.global_position = Vector3(0, 0, 0)
-	add_child(mesh_instance)
 	
 	var collision = StaticBody3D.new()
 	var collider = CollisionShape3D.new()

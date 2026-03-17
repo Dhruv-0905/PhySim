@@ -25,6 +25,7 @@ SignalManager="*res://Globals/Signal_Manager.gd"
 ObjectMaker="res://Globals/ObjectMaker.gd"
 EnvironmentManager="*res://Globals/EnvironmentManager.gd"
 SonataPredictor="*uid://dgb3fcobp4oge"
+SonataLogger="*uid://g4e75a152xgh"
 
 [display]
 
