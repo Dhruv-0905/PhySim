@@ -277,7 +277,32 @@ func _build_context_frame() -> PackedFloat32Array:
 # ─────────────────────────────────────────────────────────────────────────────
 
 func _build_scene_static_norm() -> PackedFloat32Array:
-	var ss : PackedFloat32Array = PackedFloat32Array([_gravity.x, _gravity.y, _gravity.z])
+	# scene_static layout (from normstats):
+	# [0] env_state_binary   — 0.0 = VACUUM, 1.0 = ATMOSPHERE
+	# [1] air_drag_coefficient — 0.0 (vacuum) or 0.15 (atmosphere)
+	# [2] n_objects          — count of active objects
+
+	var n_active : int = 0
+	for i in range(NMAX):
+		if _mask[i] > 0.5:
+			n_active += 1
+
+	# Infer env_state from whether any object has non-zero linear_damp
+	# (set by your spawner when ATMOSPHERE is active)
+	var is_atmosphere : float = 0.0
+	var air_drag      : float = 0.0
+	for obj in _objects:
+		var rb := obj as RigidBody3D
+		if is_instance_valid(rb) and rb.linear_damp > 0.01:
+			is_atmosphere = 1.0
+			air_drag      = 0.15
+			break
+
+	var ss : PackedFloat32Array = PackedFloat32Array([
+		is_atmosphere,
+		air_drag,
+		float(n_active)
+	])
 	for i in range(NSCENE):
 		ss[i] = (ss[i] - _nss_mean[i]) / maxf(_nss_std[i], 1e-8)
 	return ss
@@ -306,22 +331,37 @@ func _build_obj_static_norm() -> void:
 ## Feature layout: shape_one_hot(6) + mass_log(1) + friction(1) +
 ##                 bounce(1) + lin_damp(1) + ang_damp(1)
 func _extract_obj_static_raw(obj: RigidBody3D) -> PackedFloat32Array:
+	# obj_static layout (from normstats names):
+	# [0]  mass
+	# [1]  gravity_scale
+	# [2]  gravity_magnitude
+	# [3]  friction_applied
+	# [4]  bounce_applied
+	# [5]  linear_damp
+	# [6]  angular_damp
+	# [7]  shape_type_int
+	# [8]  shape_dim_primary
+	# [9]  shape_dim_secondary
+	# [10] env_state_binary
+
 	var raw : PackedFloat32Array
 	raw.resize(NSTATIC)
 	raw.fill(0.0)
 
-	# Shape one-hot [0..5] — read from metadata set by spawner
-	var shape_name : String = obj.get_meta("shape_type", "SPHERE")
-	var shape_idx  : int    = SHAPE_ORDER.find(shape_name)
-	if shape_idx >= 0:
-		raw[shape_idx] = 1.0
+	var grav_scale : float = obj.get_meta("gravity_scale", 1.0)
+	var grav_mag   : float = abs(_gravity.length() * grav_scale)
 
-	# Scalar physics properties [6..10]
-	raw[6]  = log(maxf(obj.mass, 1e-3))
-	raw[7]  = obj.physics_material_override.friction   if obj.physics_material_override else 0.5
-	raw[8]  = obj.physics_material_override.bounce     if obj.physics_material_override else 0.0
-	raw[9]  = obj.linear_damp
-	raw[10] = obj.angular_damp
+	raw[0]  = obj.mass
+	raw[1]  = grav_scale
+	raw[2]  = grav_mag
+	raw[3]  = obj.physics_material_override.friction if obj.physics_material_override else 0.5
+	raw[4]  = obj.physics_material_override.bounce   if obj.physics_material_override else 0.0
+	raw[5]  = obj.linear_damp
+	raw[6]  = obj.angular_damp
+	raw[7]  = float(SHAPE_ORDER.find(obj.get_meta("shape_type", "SPHERE")))
+	raw[8]  = obj.get_meta("shape_dim_primary",   0.5)
+	raw[9]  = obj.get_meta("shape_dim_secondary", 0.5)
+	raw[10] = 1.0 if obj.linear_damp > 0.01 else 0.0   # env_state_binary
 	return raw
 
 
@@ -439,18 +479,26 @@ func _load_norm_stats(path: String) -> bool:
 	f.close()
 
 	var d : Dictionary = json.get_data()
-	print("[SonataIIRuntime] normstats keys: ", d.keys())  # remove after confirming
+	print("[SonataIIRuntime] normstats keys: ", d.keys())
 
 	var ss_block  : Dictionary = _get_key(d, ["scene_static",  "scenestatic",  "ss"])
 	var os_block  : Dictionary = _get_key(d, ["obj_static",    "objstatic",    "os"])
 	var dyn_block : Dictionary = _get_key(d, ["obj_dynamic",   "objdynamic",   "dyn", "dynamic"])
-	var nbr_block : Dictionary = _get_key(d, ["neighbourhood", "neighborhood", "nbr", "pairwise"])
-	var tgt_block : Dictionary = _get_key(d, ["target",        "tgt"])
+	var nbr_block : Dictionary = _get_key(d, ["pairwise",      "neighbourhood","neighborhood", "nbr"])
 
-	if ss_block.is_empty() or os_block.is_empty() or dyn_block.is_empty() \
-	or nbr_block.is_empty() or tgt_block.is_empty():
-		push_error("SonataIIRuntime: one or more required blocks missing. Keys found: " + str(d.keys()))
+	if ss_block.is_empty() or os_block.is_empty() or dyn_block.is_empty() or nbr_block.is_empty():
+		push_error("SonataIIRuntime: required block missing. Keys found: " + str(d.keys()))
 		return false
+
+	# target block does not exist in this exporter — slice obj_dynamic[:NTARGET]
+	# This is valid: obj_dynamic[0:13] = pos(3)+quat(4)+linvel(3)+angvel(3) = target features
+	var dyn_mean : Array = dyn_block["mean"]
+	var dyn_std  : Array = dyn_block["std"]
+	var tgt_block : Dictionary = {
+		"mean": dyn_mean.slice(0, NTARGET),
+		"std":  dyn_std.slice(0,  NTARGET)
+	}
+	push_warning("SonataIIRuntime: no 'target' block in normstats — using obj_dynamic[:13] as target stats (valid)")
 
 	_nss_mean  = _to_pfa(ss_block["mean"])
 	_nss_std   = _to_pfa(ss_block["std"])
@@ -463,12 +511,11 @@ func _load_norm_stats(path: String) -> bool:
 	_ntgt_mean = _to_pfa(tgt_block["mean"])
 	_ntgt_std  = _to_pfa(tgt_block["std"])
 
-	# Sanity checks
-	assert(_nss_mean.size()  == NSCENE,  "scene_static mean size mismatch — got %d expected %d" % [_nss_mean.size(),  NSCENE])
-	assert(_nos_mean.size()  == NSTATIC, "obj_static mean size mismatch — got %d expected %d"   % [_nos_mean.size(),  NSTATIC])
-	assert(_ndyn_mean.size() == NDYN,    "obj_dynamic mean size mismatch — got %d expected %d"  % [_ndyn_mean.size(), NDYN])
-	assert(_nnbr_mean.size() == NNBR,    "neighbourhood mean size mismatch — got %d expected %d"% [_nnbr_mean.size(), NNBR])
-	assert(_ntgt_mean.size() == NTARGET, "target mean size mismatch — got %d expected %d"       % [_ntgt_mean.size(), NTARGET])
+	assert(_nss_mean.size()  == NSCENE,  "scene_static size mismatch — got %d expected %d" % [_nss_mean.size(),  NSCENE])
+	assert(_nos_mean.size()  == NSTATIC, "obj_static size mismatch — got %d expected %d"   % [_nos_mean.size(),  NSTATIC])
+	assert(_ndyn_mean.size() == NDYN,    "obj_dynamic size mismatch — got %d expected %d"  % [_ndyn_mean.size(), NDYN])
+	assert(_nnbr_mean.size() == NNBR,    "pairwise size mismatch — got %d expected %d"     % [_nnbr_mean.size(), NNBR])
+	assert(_ntgt_mean.size() == NTARGET, "target size mismatch — got %d expected %d"       % [_ntgt_mean.size(), NTARGET])
 
 	print("[SonataIIRuntime] normstats loaded OK — ss:%d os:%d dyn:%d nbr:%d tgt:%d" % [
 		_nss_mean.size(), _nos_mean.size(), _ndyn_mean.size(),
@@ -477,14 +524,12 @@ func _load_norm_stats(path: String) -> bool:
 	return true
 
 
-## Try multiple candidate key names, return the first one found.
-## Prints a clear error with all available keys if nothing matches.
 func _get_key(d: Dictionary, candidates: Array) -> Dictionary:
 	for k in candidates:
 		if d.has(k):
 			return d[k]
 	push_error("SonataIIRuntime: none of these keys found: " + str(candidates))
-	push_error("SonataIIRuntime: available keys are:       " + str(d.keys()))
+	push_error("SonataIIRuntime: available keys: " + str(d.keys()))
 	return {}
 
 
